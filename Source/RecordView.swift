@@ -6,20 +6,18 @@
 //  Copyright © 2019 Devlomi. All rights reserved.
 //
 
-import UIKit
-
 public class RecordView: UIView, CAAnimationDelegate {
 
     private var isSwiped = false
-    private var bucketImageView: BucketImageView!
+    public var bucketImageView: BucketImageView!
 
     private var timer: Timer?
     private var duration: CGFloat = 0
     private var mTransform: CGAffineTransform!
     private var audioPlayer: AudioPlayer!
-    
-    private var timerStackView: UIStackView!
-    private var slideToCancelStackVIew: UIStackView!
+
+    public var timerStackView: UIStackView!
+    public var slideToCancelStackVIew: UIStackView!
 
     public weak var delegate: RecordViewDelegate?
     public var offset: CGFloat = 20
@@ -73,7 +71,7 @@ public class RecordView: UIView, CAAnimationDelegate {
         return slide
     }()
 
-    private var timerLabel: UILabel = {
+    public var timerLabel: UILabel = {
         let label = UILabel()
         label.text = "00:00"
         label.font = label.font.withSize(12)
@@ -82,6 +80,7 @@ public class RecordView: UIView, CAAnimationDelegate {
     }()
 
     private func setup() {
+
         bucketImageView = BucketImageView(frame: frame)
         bucketImageView.animationDelegate = self
         bucketImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -90,13 +89,15 @@ public class RecordView: UIView, CAAnimationDelegate {
 
 
         timerStackView = UIStackView(arrangedSubviews: [bucketImageView, timerLabel])
+
         timerStackView.translatesAutoresizingMaskIntoConstraints = false
         timerStackView.isHidden = true
-        timerStackView.spacing = 5
+        timerStackView.spacing = 15
 
 
         slideToCancelStackVIew = UIStackView(arrangedSubviews: [arrow, slideLabel])
         slideToCancelStackVIew.translatesAutoresizingMaskIntoConstraints = false
+        slideToCancelStackVIew.spacing = 2
         slideToCancelStackVIew.isHidden = true
 
 
@@ -107,7 +108,7 @@ public class RecordView: UIView, CAAnimationDelegate {
         arrow.widthAnchor.constraint(equalToConstant: 15).isActive = true
         arrow.heightAnchor.constraint(equalToConstant: 15).isActive = true
 
-        slideToCancelStackVIew.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        slideToCancelStackVIew.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -70).isActive = true
         slideToCancelStackVIew.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
 
 
@@ -118,6 +119,7 @@ public class RecordView: UIView, CAAnimationDelegate {
         mTransform = CGAffineTransform(scaleX: buttonTransformScale, y: buttonTransformScale)
 
         audioPlayer = AudioPlayer()
+        self.backgroundColor = .white
     }
 
     override init(frame: CGRect) {
@@ -136,7 +138,7 @@ public class RecordView: UIView, CAAnimationDelegate {
         }
         onFinish(recordButton: recordButton)
     }
-    
+
     func onTouchCancelled(recordButton: RecordButton) {
         onTouchCancel(recordButton: recordButton)
     }
@@ -160,15 +162,16 @@ public class RecordView: UIView, CAAnimationDelegate {
         self.prepareToStartRecording(recordButton: recordButton)
 
         if isSoundEnabled {
-            audioPlayer.playAudioFile(soundType: .start)
-            audioPlayer.didFinishPlaying = { [weak self] _ in
-                self?.delegate?.onStart()
-            }
+//            audioPlayer.playAudioFile(soundType: .start)
+//            audioPlayer.didFinishPlaying = { [weak self] _ in
+//
+//            }
+            self.delegate?.onStart()
         } else {
             delegate?.onStart()
         }
     }
-    
+
     private func prepareToStartRecording(recordButton: RecordButton) {
         resetTimer()
 
@@ -199,17 +202,17 @@ public class RecordView: UIView, CAAnimationDelegate {
             recordButton.transform = .identity
         })
     }
-    
+
     //this will be called when user swipes to the left and cancel the record
     fileprivate func hideCancelStackViewAndTimeLabel() {
         slideToCancelStackVIew.isHidden = true
         timerLabel.isHidden = true
     }
-    
+
     private func onSwipe(recordButton: RecordButton) {
         isSwiped = true
         audioPlayer.didFinishPlaying = nil
-        
+
         animateRecordButtonToIdentity(recordButton)
 
         hideCancelStackViewAndTimeLabel()
@@ -226,21 +229,21 @@ public class RecordView: UIView, CAAnimationDelegate {
 
         delegate?.onCancel()
     }
-    
+
     private func onTouchCancel(recordButton: RecordButton) {
         isSwiped = false
-        
+
         audioPlayer.didFinishPlaying = nil
-        
+
         animateRecordButtonToIdentity(recordButton)
-        
+
         hideCancelStackViewAndTimeLabel()
-        
+
         bucketImageView.isHidden = true
         delegate?.onAnimationEnd?()
-        
+
         resetTimer()
-        
+
         delegate?.onCancel()
     }
 
@@ -327,7 +330,7 @@ extension RecordView: AnimationFinishedDelegate {
 
 private extension RecordView {
     func isLessThanOneSecond() -> Bool {
-        return duration < 1
+        return duration < 0
     }
 }
 

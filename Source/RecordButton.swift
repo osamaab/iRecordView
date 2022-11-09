@@ -37,21 +37,21 @@ open class RecordButton: UIButton, UIGestureRecognizerDelegate {
 
 
     private func setup() {
-        
+
         setTitle("", for: .normal)
 
         if image(for: .normal) == nil {
             let image = UIImage.fromPod("mic_blue").withRenderingMode(.alwaysTemplate)
             setImage(image, for: .normal)
-            
+
             tintColor = .blue
         }
-        
+
 
         moveGesture = UIPanGestureRecognizer(target: self, action: #selector(touchMoved(_:)))
         moveGesture.delegate = self
 
-        
+
 
         touchDownAndUpGesture = iGesutreRecognizer(target: self, action: #selector(handleUpAndDown(_:)))
         touchDownAndUpGesture.delegate = self
@@ -100,7 +100,7 @@ open class RecordButton: UIButton, UIGestureRecognizerDelegate {
 
         case .ended:
             recordView.onTouchUp(recordButton: self)
-            
+
         case .cancelled:
             recordView.onTouchCancelled(recordButton: self)
 
@@ -108,7 +108,7 @@ open class RecordButton: UIButton, UIGestureRecognizerDelegate {
             break
         }
     }
-    
+
     public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
         return (gestureRecognizer == touchDownAndUpGesture && otherGestureRecognizer == moveGesture) || (gestureRecognizer == moveGesture && otherGestureRecognizer == touchDownAndUpGesture)
     }

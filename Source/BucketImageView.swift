@@ -13,7 +13,7 @@ protocol AnimationFinishedDelegate {
     func animationFinished()
 }
 
-class BucketImageView: UIImageView, CAAnimationDelegate {
+public class BucketImageView: UIImageView, CAAnimationDelegate {
 
     var smallMicImage: UIImage! {
         didSet {
@@ -21,31 +21,31 @@ class BucketImageView: UIImageView, CAAnimationDelegate {
         }
     }
 
-    private var bucketLidLayer = CALayer()
-    private var bucketBodyLayer = CALayer()
-    private var micLayer = CALayer()
+    public var bucketLidLayer = CALayer()
+    public var bucketBodyLayer = CALayer()
+    public var micLayer = CALayer()
     //this layer will contain bucketLidLayer + bucketBodyLayer
-    private var bucketContainerLayer = CALayer()
+    public var bucketContainerLayer = CALayer()
 
-    private let animationNameKey = "animation_name"
-    private let micUpAnimationName = "mic_up_animation"
-    private let micDownAnimationName = "mic_down_animation"
-    private let bucketUpAnimationName = "bucket_up_animation"
-    private let bucketDownAnimationName = "bucket_drive_down_animation"
-    private let micAlphaAnimationName = "mic_alpha_animation"
+    public let animationNameKey = "animation_name"
+    public let micUpAnimationName = "mic_up_animation"
+    public let micDownAnimationName = "mic_down_animation"
+    public let bucketUpAnimationName = "bucket_up_animation"
+    public let bucketDownAnimationName = "bucket_drive_down_animation"
+    public let micAlphaAnimationName = "mic_alpha_animation"
 
-    //the height of the Mic that should go up to
-    private let micUpAnimationHeight: CGFloat = 150;
-    private let micYOffsetFromBase = 7;
+//    eight of the Mic that should go up to
+    public let micUpAnimationHeight: CGFloat = 150;
+    public let micYOffsetFromBase = 7;
 
 
-    private var micMidY, micOriginY: CGFloat!
-    private var bucketY: CGFloat!
+    public var micMidY, micOriginY: CGFloat!
+    public var bucketY: CGFloat!
 
     var animationDelegate: AnimationFinishedDelegate?
 
 
-    override init(frame: CGRect) {
+    override public init(frame: CGRect) {
         super.init(frame: frame)
 
         setup()
@@ -67,7 +67,7 @@ class BucketImageView: UIImageView, CAAnimationDelegate {
     }
 
 
-    private func setup() {
+    public func setup() {
 
         smallMicImage = UIImage.fromPod("mic_red")
 
@@ -146,7 +146,7 @@ class BucketImageView: UIImageView, CAAnimationDelegate {
 
     //close bucket (move bucket lid)
     private func closeBucket() {
-        
+
         let animationTimingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         let animation = CAKeyframeAnimation()
         animation.delegate = self
@@ -168,7 +168,7 @@ class BucketImageView: UIImageView, CAAnimationDelegate {
     }
 
 
-    override func layoutSubviews() {
+    public override func layoutSubviews() {
         super.layoutSubviews()
 
         if micMidY == nil {
@@ -255,7 +255,7 @@ class BucketImageView: UIImageView, CAAnimationDelegate {
 
     }
 
-    func animationDidStart(_ anim: CAAnimation) {
+    public func animationDidStart(_ anim: CAAnimation) {
         if let animationName = anim.value(forKey: animationNameKey) as? String {
             if animationName == micDownAnimationName {
                 bucketDriveUpAnimation()
@@ -266,7 +266,7 @@ class BucketImageView: UIImageView, CAAnimationDelegate {
         }
     }
 
-    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
+    public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         if !flag {
             return
         }
